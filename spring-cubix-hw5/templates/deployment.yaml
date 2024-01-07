@@ -51,6 +51,24 @@ spec:
             - name: management
               containerPort: 8081
               protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 1
+            httpGet:
+              port: management
+              path: /actuator/health/liveness
+          livenessProbe:
+            periodSeconds: 10
+            failureThreshold: 2
+            httpGet:
+              port: management
+              path: /actuator/health/liveness
+          readinessProbe:
+            periodSeconds: 5
+            failureThreshold: 1
+            httpGet:
+              port: management
+              path: /actuator/health/readiness
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
